@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <title><%= title %></title>
+</head>
+<body>
+    <form action="/Submit" method="post">
+        <div class="container">
+            <div><caption><h1>ToDo List App</h1></caption></div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input type="text" class="form-control" name="desciption" id="description" aria-describedby="emailHelp" placeholder="What do you need to do">
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="category">State</label>
+                <select  class="form-control" id="select_category" name="category">
+                    <option selected>Choose a Category</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Work">Work</option>
+                    <option value="School">School</option>
+                    <option value="Cleaning">Cleaning</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="date">Date</label>
+                <input type="date" class="form-control" name="date" id="date" >
+            </div>
+        </div> 
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Task</button>
+        </div>
+      </form>
+
+      <div class="container">
+      <a href="" id="submitl_ink"><button  class="btn btn-danger" id="delete_task"> <i class="fa-solid fa-trash"></i> Delete Task</button></a>
+
+      <hr>
+      <table class="table table-striped table-hover">
+        <% let colors = ['primary', 'secondary', 'success', 'danger', 'warning']; %>
+        <% for(let i of listdata) {%>
+          <tr>
+            <td><input type="checkbox" id="chk" value="<%=i.id%>"> &nbsp;&nbsp;<strong><%= i.description %></strong> </br><sub> <i class="fa-solid fa-calendar-days"></i> <%= new Date(i.duedate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) %></sub></td> <td><button type="button" class="btn btn-<%= colors[Math.floor(Math.random() * colors.length)] %>" aria-readonly="true"><%=i.category %></button></td>
+          </tr>
+            <% }%>
+            
+    </div>
+</body>
+<script>
+    $(document).ready(function() {
+        console.log('run');
+        $('#delete_task').click(function() {
+            var taskIds = [];
+            $('#chk:checked').each(function() {
+                taskIds.push($(this).val());
+            });
+
+            if (taskIds.length > 0) {
+                var deleteUrl = '/delete-task/?ids=' + taskIds.join(',');
+                $('#submitl_ink').attr('href', deleteUrl);
+            }
+        });
+    });
+</script>
+</html>
